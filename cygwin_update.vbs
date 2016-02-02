@@ -8,10 +8,10 @@
 '	- 0.5
 '       - ADDED
 '			- check for delay since last update check
-'	
+'
 '   - 0.4
 '       - ADDED
-'           - check version number before downloading setup  
+'           - check version number before downloading setup
 
 '   - 0.3
 '       - ADDED
@@ -21,7 +21,7 @@
 '       - Skip when check was done under a given delay
 '       - Run setup in silent mode
 '       - read output
-'   - 
+'   -
 '
 Option Explicit
 dim setupGitPage, checkForUpdateDelay, lastUpdate
@@ -45,9 +45,9 @@ select case iOSBits
     case 64
         sDownDir = "C:\cygwin64\"
         sFileName = "setup-x86_64.exe"
-    case else    
+    case else
         WScript.Echo "Error: Attemp to determine arch failed" _
-                      &vbNewline &"The script will stop in few seconds"                
+                      &vbNewline &"The script will stop in few seconds"
         WScript.Sleep 8000
         WScript.Quit
 end select
@@ -70,7 +70,7 @@ WScript.Echo "Delay since last update check: " &lastUpdate &" hours."
 if lastUpdate >= checkForUpdateDelay then
 	versionCompare()
 Else
-	WScript.Echo "You have define to do it only after " &checkForUpdateDelay &" hours. This check will be skipped"    
+	WScript.Echo "You have define to do it only after " &checkForUpdateDelay &" hours. This check will be skipped"
 	WScript.Sleep 8000
 end if
 
@@ -78,21 +78,21 @@ function versionCompare()
 	dim localVer, onlineVer
 	localVer = checkLocalVersion()
 	onlineVer = checkOnlineVersion()
-	
+
 	if localVer = -1 then
 		WScript.Echo "Warning: Unable to determining Local version"
-	else 
+	else
 		WScript.Echo "Local version = " &localVer
 	end if
-	
+
 	if onlineVer = -1 then
 		WScript.Echo "Cannot determine the online version number, script will stop"
 		WScript.Sleep 5000
 		WScript.Quit
-	else 
+	else
 		WScript.Echo "Online version = " &onlineVer
 	end if
-	
+
 	if onlineVer > localVer then
 		WScript.Echo "Online version more recent"
 
@@ -101,7 +101,7 @@ function versionCompare()
 			Set objFile = objFSO.CreateTextFile(sVersionFile,True)
 			objFile.Write onlineVer & vbCrLf
 			objFile.Close
-		 
+
 			' set Working Directory (usefull for saving here, logfiles created by cygwin setup)
 			set oWShell = createObject("WScript.Shell")
 			oWShell.CurrentDirectory = sDownDir
@@ -124,7 +124,7 @@ function versionCompare()
 	elseif onlineVer = localVer then
 		Set objFile = objFSO.CreateTextFile(sVersionFile,True)
 		objFile.Write onlineVer & vbCrLf
-		objFile.Close	
+		objFile.Close
 		WScript.Echo "Locale version up to date"
 		WScript.Sleep 8000
 	else
@@ -157,10 +157,10 @@ function checkOnlineVersion()
 	' === Check online version number
 	'Set setupGitPage = WScript.GetObject("https://sourceware.org/viewvc/cygwin-apps/setup/")
 	Set setupGitPage = WScript.GetObject("https://cygwin.com/git/gitweb.cgi?p=cygwin-setup.git;a=tags")
-	While setupGitPage.readystate <> "complete" 
-	'	WScript.Echo "." 
-		WScript.Sleep 500 
-	Wend 
+	While setupGitPage.readystate <> "complete"
+	'	WScript.Echo "."
+		WScript.Sleep 500
+	Wend
 	'WScript.Echo TypeName(setupGitPage)
 	On Error Resume Next
 	lastVerNum = trim(setupGitPage.getElementsByTagName("table")(0).firstChild.getElementsByTagName("td")(1).InnerText)
@@ -210,7 +210,7 @@ Function downloadFile(sURL, sDownLoc)
             .savetofile sDownLoc , 2 '//overwrite
             .close
         end With
-        
+
         ' If response saved
         If Err.Number = 0 Then
             WScript.Echo vbTab&"- File saved"
@@ -224,7 +224,7 @@ Function downloadFile(sURL, sDownLoc)
             downloadFile = 0
         End if
         On Error Goto 0
-        
+
     else
         WScript.Echo vbTab&"** Issue with url :" +sURL
         WScript.Echo vbTab&"** oXHttp.Status :" +oXHttp.Status
